@@ -1,4 +1,4 @@
-# rlinf_dexhand
+# RLinf-dexterous-hands
 
 Dexterous hand and data-glove drivers for RLinf.
 
@@ -12,16 +12,16 @@ Includes drivers for:
 
 ```bash
 # Base (Ruiyan hand only — needs numpy + pyserial)
-pip install rlinf_dexhand
+pip install RLinf-dexterous-hands
 
 # With glove support (adds pyyaml)
-pip install "rlinf_dexhand[glove]"
+pip install "RLinf-dexterous-hands[glove]"
 
 # With Aoyi hand support (adds pymodbus)
-pip install "rlinf_dexhand[aoyi]"
+pip install "RLinf-dexterous-hands[aoyi]"
 
 # Everything
-pip install "rlinf_dexhand[all]"
+pip install "RLinf-dexterous-hands[all]"
 ```
 
 ## Usage
