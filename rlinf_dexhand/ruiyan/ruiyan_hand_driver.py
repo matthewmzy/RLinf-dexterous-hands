@@ -363,3 +363,42 @@ class RuiyanHandDriver:
                 velocity=self._default_velocity,
                 current=self._default_current,
             )
+
+
+def main():
+    """Sine wave test: drive all 6 fingers through a sinusoidal trajectory."""
+    import argparse
+
+    logging.basicConfig(level=logging.INFO)
+
+    parser = argparse.ArgumentParser(description="Ruiyan hand sine wave test")
+    parser.add_argument("--port", default="/dev/ttyUSB0")
+    parser.add_argument("--baudrate", type=int, default=460800)
+    parser.add_argument("--freq", type=float, default=0.2, help="Sine frequency in Hz")
+    parser.add_argument("--duration", type=float, default=10.0, help="Test duration in seconds")
+    parser.add_argument("--dt", type=float, default=0.05, help="Control loop period in seconds")
+    args = parser.parse_args()
+
+    hand = RuiyanHandDriver(port=args.port, baudrate=args.baudrate)
+    hand.initialize()
+
+    try:
+        t_start = time.time()
+        while True:
+            t = time.time() - t_start
+            if t > args.duration:
+                break
+            # Sine wave mapped from [-1, 1] to [0, 1]
+            value = 0.5 + 0.5 * np.sin(2 * np.pi * args.freq * t)
+            action = np.full(RuiyanHandDriver.NUM_DOFS, value)
+            hand.command(action)
+            state = hand.get_state()
+            logger.info(f"t={t:.2f}s  cmd={value:.3f}  state={np.round(state, 3)}")
+            time.sleep(args.dt)
+    finally:
+        hand.reset()
+        hand.shutdown()
+
+
+if __name__ == "__main__":
+    main()
